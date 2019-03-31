@@ -39,15 +39,30 @@ RCSwitchTypeCReceiver = remote_ns.class_('RCSwitchTypeCReceiver', RCSwitchRawRec
 RCSwitchTypeDReceiver = remote_ns.class_('RCSwitchTypeDReceiver', RCSwitchRawReceiver)
 
 
+def validate_raw_alternating(value):
+    if not value:
+        raise vol.Invalid("Raw remote code must not be empty")
+    last_negative = value[0] >= 0
+    last_value = value[0]
+    for val in value:
+        negative = val < 0
+        if negative == last_negative:
+            raise vol.Invalid("Raw remote codes must alternate between being positive and "
+                              "negative to encode active and inactive. {} and {} both are {}"
+                              "".format(value, last_value, 'negative' if negative else 'positive'))
+        last_negative = negative
+        last_value = val
+    return value
+
+
 def validate_raw(value):
     if isinstance(value, dict):
         return cv.Schema({
             cv.GenerateID(): cv.declare_variable_id(int32),
-            vol.Required(CONF_DATA): [vol.Any(vol.Coerce(int), cv.time_period_microseconds)],
+            vol.Required(CONF_DATA): vol.All([vol.Any(vol.Coerce(int), cv.time_period_microseconds)],
+                                             validate_raw_alternating),
         })(value)
-    return validate_raw({
-        CONF_DATA: value
-    })
+    return validate_raw({CONF_DATA: value})
 
 
 PLATFORM_SCHEMA = cv.nameable(binary_sensor.BINARY_SENSOR_PLATFORM_SCHEMA.extend({
