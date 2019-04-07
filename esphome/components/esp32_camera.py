@@ -7,6 +7,7 @@ from esphome.cpp_generator import Pvariable, add
 from esphome.cpp_types import App, Nameable, PollingComponent, esphome_ns
 
 ESP_PLATFORMS = [ESP_PLATFORM_ESP32]
+DEPENDENCIES = ['api']
 
 ESP32Camera = esphome_ns.class_('ESP32Camera', PollingComponent, Nameable)
 ESP32CameraFrameSize = esphome_ns.enum('ESP32CameraFrameSize')
@@ -29,7 +30,7 @@ FRAME_SIZES = {
     'SVGA': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_800X600,
     '1024X768': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1024X768,
     'XGA': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1024X768,
-    '1280x1024': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1280X1024,
+    '1280X1024': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1280X1024,
     'SXGA': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1280X1024,
     '1600X1200': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1600X1200,
     'UXGA': ESP32CameraFrameSize.ESP32_CAMERA_SIZE_1600X1200,
